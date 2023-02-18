@@ -1,6 +1,6 @@
-import type { Cell } from './components/Cell';
+import type { Cell } from './contexts/board';
 
-import { colMax, rowMax } from './App';
+import { COL_MAX, ROW_MAX } from './constant';
 
 export function boolToString(t: boolean) {
   return t ? '1' : '0';
@@ -18,16 +18,25 @@ const delta = [
   [1, 1],
 ];
 
+// 직접수정
+function update(board: Cell[][]): void {
+  for (let i = 0; i < ROW_MAX; i++) {
+    for (let j = 0; j < COL_MAX; j++) {
+      board[i][j].mines = getMines(board, board[i][j]);
+    }
+  }
+}
+
 export function updateMines(board: Cell[][]): Cell[][] {
   return board.map((row) =>
     row.map((cell) => ({
       ...cell,
-      mine: searchMine(board, cell),
+      mine: getMines(board, cell),
     }))
   );
 }
 
-function searchMine(board: Cell[][], cell: Cell): number {
+function getMines(board: Cell[][], cell: Cell): number {
   const { colIndex, rowIndex } = cell;
 
   // const test = (fn: () => void): void => {
@@ -41,7 +50,7 @@ function searchMine(board: Cell[][], cell: Cell): number {
     const nx = rowIndex + dx,
       ny = colIndex + dy;
 
-    if (nx < 0 || nx >= rowMax || ny < 0 || ny >= colMax) continue;
+    if (nx < 0 || nx >= ROW_MAX || ny < 0 || ny >= COL_MAX) continue;
 
     // test(() => {
     //   console.log(nx, ny, board[nx][ny], board[nx][ny].mined);

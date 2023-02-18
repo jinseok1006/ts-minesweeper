@@ -1,15 +1,24 @@
 import * as React from 'react';
 import { BsFlagFill } from 'react-icons/bs';
 
-interface ModeProps {
-  flagMode: boolean;
-  toggleFlagMode: () => void;
-}
+import { useSelector, useDispatch } from 'react-redux';
+import { flagModeSlice } from '@/contexts/flagMode';
 
-export default function ModeComponent({ flagMode, toggleFlagMode }: ModeProps) {
+import type { State } from '@/contexts';
+
+export default function ModeComponent() {
+  const { mode } = useSelector((state: State) => state.flagMode);
+  const dispatch = useDispatch();
+
+  const toggleFlagMode = () => {
+    dispatch(flagModeSlice.actions.toggle());
+  };
+
   return (
-    <button onClick={toggleFlagMode}>
-      <BsFlagFill size="1.5rem" color={flagMode ? 'red' : 'unset'} />
-    </button>
+    <>
+      <button onClick={toggleFlagMode}>
+        <BsFlagFill size="1.5rem" color={mode ? 'red' : 'unset'} />
+      </button>
+    </>
   );
 }

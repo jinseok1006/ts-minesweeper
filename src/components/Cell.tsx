@@ -2,14 +2,7 @@ import * as React from 'react';
 import { boolToString } from '../util';
 import styled, { css } from 'styled-components';
 
-export interface Cell {
-  colIndex: number;
-  rowIndex: number;
-  mined: boolean;
-  selected: boolean;
-  flag: boolean;
-  mine: number;
-}
+import type { Cell } from '@/contexts/board';
 
 const CellBlock = styled.button`
   // instead of !important
@@ -28,26 +21,16 @@ const CellBlock = styled.button`
 interface CellProps {
   cell: Cell;
   handleSelect: (rowInput: number, colInput: number) => void;
-  handleFlag: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    rowInput: number,
-    colInput: number
-  ) => void;
 }
 
-export default function CellComponent({
-  cell,
-  handleSelect,
-  handleFlag,
-}: CellProps) {
-  const { colIndex, rowIndex, mined, selected, flag, mine } = cell;
+export default function CellComponent({ cell, handleSelect }: CellProps) {
+  const { colIndex, rowIndex, mined, selected, flaged: flag, mines } = cell;
 
   return (
     <CellBlock
       selected={selected}
       flag={flag}
       onClick={() => handleSelect(rowIndex, colIndex)}
-      onContextMenu={(e) => handleFlag(e, rowIndex, colIndex)}
     >
       {rowIndex}
       {colIndex}
@@ -55,7 +38,7 @@ export default function CellComponent({
       {boolToString(mined)}
       {boolToString(selected)}
       {boolToString(flag)}
-      {mine}
+      {mines}
     </CellBlock>
   );
 }
