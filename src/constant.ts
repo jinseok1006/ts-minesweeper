@@ -1,4 +1,6 @@
 export const COL_MAX = 7;
 export const ROW_MAX = 13;
 
-// 왜 app.tsx에서 export하면 안되는걸까
+// 항상 circular imports가 존재하는지 확인하자.
+
+export const CSS_WIDTH = 350;

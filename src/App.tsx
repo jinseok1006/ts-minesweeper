@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { useEffect } from 'react';
+
 import styled, { createGlobalStyle } from 'styled-components';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
+
+import { initializeBoard } from './util';
 
 import store from './contexts';
 
 import Board from './components/Board';
 import ModeComponent from './components/Mode';
-
-// dimension of board
-export const COL_MAX = 7;
-export const ROW_MAX = 13;
+import Header from './components/Header';
 
 // Minesweeper;
 
@@ -50,8 +51,16 @@ function App() {
 }
 
 function Minesweeper() {
+  const dispatch = useDispatch();
+
+  // 게임이 처음 시작될 때 상태 초기화
+  useEffect(() => {
+    initializeBoard(dispatch);
+  }, []);
+
   return (
     <>
+      <Header />
       <Board />
       <Panel>
         <ModeComponent />

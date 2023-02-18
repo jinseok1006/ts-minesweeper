@@ -1,6 +1,10 @@
 import type { Cell } from './contexts/board';
 
 import { COL_MAX, ROW_MAX } from './constant';
+import { Dispatch } from './contexts';
+
+import boardSlice from './contexts/board';
+import minesSlice from './contexts/mines';
 
 export function boolToString(t: boolean) {
   return t ? '1' : '0';
@@ -19,31 +23,16 @@ const delta = [
 ];
 
 // 직접수정
-function update(board: Cell[][]): void {
+function updateCellMines(board: Cell[][]): void {
   for (let i = 0; i < ROW_MAX; i++) {
     for (let j = 0; j < COL_MAX; j++) {
-      board[i][j].mines = getMines(board, board[i][j]);
+      board[i][j].mines = getCellMines(board, board[i][j]);
     }
   }
 }
 
-export function updateMines(board: Cell[][]): Cell[][] {
-  return board.map((row) =>
-    row.map((cell) => ({
-      ...cell,
-      mine: getMines(board, cell),
-    }))
-  );
-}
-
-function getMines(board: Cell[][], cell: Cell): number {
+function getCellMines(board: Cell[][], cell: Cell): number {
   const { colIndex, rowIndex } = cell;
-
-  // const test = (fn: () => void): void => {
-  //   if (rowIndex === 0 && colIndex === 0) {
-  //     fn();
-  //   }
-  // };
 
   let mines = 0;
   for (const [dx, dy] of delta) {
@@ -52,17 +41,49 @@ function getMines(board: Cell[][], cell: Cell): number {
 
     if (nx < 0 || nx >= ROW_MAX || ny < 0 || ny >= COL_MAX) continue;
 
-    // test(() => {
-    //   console.log(nx, ny, board[nx][ny], board[nx][ny].mined);
-    // });
-
-    // try {
-    //   if (board[nx][ny].mined) mines += 1;
-    // } catch (e) {
-    //   console.error(nx, ny);
-    // }
     if (board[nx][ny].mined) mines += 1;
   }
 
   return mines;
 }
+
+export function getAllMines(board: Cell[][]): number {
+  let mines = 0;
+  for (let i = 0; i < ROW_MAX; i++) {
+    for (let j = 0; j < COL_MAX; j++) {
+      if (board[i][j].mined) mines += 1;
+    }
+  }
+
+  return mines;
+}
+
+const MINE_WEIGHT = 0.7;
+const createMine = (): boolean => Math.random() > MINE_WEIGHT;
+
+const initialCell = (rowIndex: number, colIndex: number): Cell => ({
+  colIndex,
+  rowIndex,
+  mined: createMine(),
+  selected: false,
+  flaged: false,
+  mines: 0,
+});
+
+const getInitialBoard = () => {
+  const board: Cell[][] = Array.from({ length: ROW_MAX }, (_, i) =>
+    Array.from({ length: COL_MAX }, (_, j) => initialCell(i, j))
+  );
+
+  updateCellMines(board);
+
+  return board;
+};
+
+export const initializeBoard = (dispatch: Dispatch): void => {
+  const board = getInitialBoard();
+  const mines = getAllMines(board);
+
+  dispatch(boardSlice.actions.init(board));
+  dispatch(minesSlice.actions.set(mines));
+};

@@ -2,16 +2,17 @@ import * as React from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
-import { COL_MAX } from '@/constant';
+import { COL_MAX, CSS_WIDTH } from '@/constant';
 
 import type { State } from '@/contexts';
-import { boardSlice } from '@/contexts/board';
+import boardSlice from '@/contexts/board';
 
 import CellComponent from './Cell';
+import { initializeBoard } from '@/util';
+import minesSlice from '@/contexts/mines';
 
 const BoardBlock = styled.div`
-  width: 350px;
+  width: ${CSS_WIDTH}px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -34,27 +35,37 @@ const BoardBlock = styled.div`
     // that causes the background color of a clickable element
     // to temporarily change when it is clicked.
     -webkit-tap-highlight-color: transparent;
-
-    @media (hover: hover) {
-      &:hover {
-        background-color: lightgreen;
-      }
-    }
   }
 `;
 
 export default function Board() {
   const board = useSelector((state: State) => state.board);
-  const { mode: flagMode } = useSelector((state: State) => state.flagMode);
+  const flagMode = useSelector((state: State) => state.flagMode);
   const dispatch = useDispatch();
 
   const handleSelect = (rowInput: number, colInput: number): void => {
     if (board[rowInput][colInput].selected) return;
 
+    // 깃발모드
     if (flagMode) {
-      dispatch(boardSlice.actions.flaged({ row: rowInput, col: colInput }));
+      // flaged -> unflaged
+      if (board[rowInput][colInput].flaged) {
+        dispatch(minesSlice.actions.increase());
+      } else {
+        dispatch(minesSlice.actions.decrease());
+      }
+      dispatch(boardSlice.actions.flag({ row: rowInput, col: colInput }));
     } else {
-      dispatch(boardSlice.actions.selected({ row: rowInput, col: colInput }));
+      // 지뢰 클릭시 게임초기화
+      if (board[rowInput][colInput].mined) {
+        alert('MINED!');
+        alert('RESET BOARD');
+        initializeBoard(dispatch);
+      }
+      // 빈칸
+      else {
+        dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
+      }
     }
   };
 
