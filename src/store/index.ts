@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import boardSlice from './board';
+import debugSlice from './debug';
 import flagModeSlice from './flagMode';
 import minesSlice from './mines';
 
@@ -9,6 +10,7 @@ const store = configureStore({
     board: boardSlice.reducer,
     flagMode: flagModeSlice.reducer,
     mines: minesSlice.reducer,
+    debug: debugSlice.reducer,
   },
   devTools: true,
 });

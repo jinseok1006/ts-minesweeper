@@ -12,6 +12,7 @@ import Board from './components/Board';
 import ModeComponent from './components/Mode';
 import Header from './components/Header';
 import Over from './components/Over';
+import Debug from './components/Debug';
 
 // Minesweeper;
 
@@ -73,6 +74,7 @@ function Minesweeper() {
     <>
       <Header />
       <Board toggleOver={toggleOver} />
+      <Debug />
       <Panel>
         <ModeComponent />
       </Panel>

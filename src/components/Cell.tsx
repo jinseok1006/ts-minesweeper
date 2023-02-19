@@ -20,6 +20,7 @@ const CellBlock = styled.button`
 
 interface CellProps {
   cell: Cell;
+  debug: boolean;
   handleSelect: (rowInput: number, colInput: number) => void;
   handleRightclick: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -30,6 +31,7 @@ interface CellProps {
 
 export default function CellComponent({
   cell,
+  debug,
   handleSelect,
   handleRightclick,
 }: CellProps) {
@@ -42,14 +44,19 @@ export default function CellComponent({
       onClick={() => handleSelect(rowIndex, colIndex)}
       onContextMenu={(e) => handleRightclick(e, rowIndex, colIndex)}
     >
-      {rowIndex}
-      {colIndex}
-      <br />
-      {boolToString(mined)}
-      {boolToString(selected)}
-      {boolToString(flaged)}
-      {mines}
-      {/* {selected && mines ? mines : null} */}
+      {debug ? (
+        <>
+          {rowIndex}
+          {colIndex}
+          <br />
+          {boolToString(mined)}
+          {boolToString(selected)}
+          {boolToString(flaged)}
+          {mines}
+        </>
+      ) : selected && mines ? (
+        mines
+      ) : null}
     </CellBlock>
   );
 }

@@ -44,7 +44,7 @@ interface BoardProps {
 }
 
 export default function Board({ toggleOver }: BoardProps) {
-  const { flagMode, board } = useSelector((state: RootState) => state);
+  const { flagMode, board, debug } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
   // 이상한 의존방식...?
@@ -106,6 +106,7 @@ export default function Board({ toggleOver }: BoardProps) {
       {board.map((row) =>
         row.map((cell, j) => (
           <CellComponent
+            debug={debug}
             key={j}
             cell={cell}
             handleSelect={handleClick}

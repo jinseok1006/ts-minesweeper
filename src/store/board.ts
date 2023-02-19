@@ -64,7 +64,6 @@ const boardSlice = createSlice({
       state[row][col].flaged = !state[row][col].flaged;
     },
     set: (state, action: PayloadAction<Cell[][]>) => {
-      console.log(action.payload);
       return action.payload;
     },
   },
