@@ -1,10 +1,10 @@
-import type { Cell } from './contexts/board';
+import type { Cell } from './store/board';
 
 import { COL_MAX, ROW_MAX } from './constant';
-import { Dispatch } from './contexts';
+import { Dispatch } from './store';
 
-import boardSlice from './contexts/board';
-import minesSlice from './contexts/mines';
+import boardSlice from './store/board';
+import minesSlice from './store/mines';
 import { DELTA } from './constant';
 
 export function boolToString(t: boolean) {

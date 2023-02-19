@@ -1,16 +1,16 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { COL_MAX, DELTA, ROW_MAX, CSS_WIDTH } from '@/constant';
+import { COL_MAX, CSS_WIDTH } from '@/constant';
 
-import type { State } from '@/contexts';
-import boardSlice from '@/contexts/board';
-import type { Cell } from '@/contexts/board';
+import type { RootState } from '@/store';
+import boardSlice from '@/store/board';
 
 import CellComponent from './Cell';
-import { initializeBoard } from '@/util';
-import minesSlice from '@/contexts/mines';
+import minesSlice from '@/store/mines';
+
+import type { OverState } from '@/App';
 
 const BoardBlock = styled.div`
   width: ${CSS_WIDTH}px;
@@ -39,9 +39,25 @@ const BoardBlock = styled.div`
   }
 `;
 
-export default function Board() {
-  const { flagMode, board } = useSelector((state: State) => state);
+interface BoardProps {
+  toggleOver: (payload: OverState) => void;
+}
+
+export default function Board({ toggleOver }: BoardProps) {
+  const { flagMode, board } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
+
+  // 이상한 의존방식...?
+  useEffect(() => {
+    if (
+      board.length > 0 &&
+      board.every((row) =>
+        row.every((cell) => cell.selected || (cell.mined && cell.flaged))
+      )
+    ) {
+      toggleOver('WIN');
+    }
+  }, [board]);
 
   const handleClick = (rowInput: number, colInput: number): void => {
     if (board[rowInput][colInput].selected) return;
@@ -53,8 +69,7 @@ export default function Board() {
       if (board[rowInput][colInput].flaged) return;
       // 지뢰
       if (board[rowInput][colInput].mined) {
-        alert('MINED!\nRESET BOARD');
-        initializeBoard(dispatch);
+        toggleOver('DEFEAT');
       }
       // 빈칸
       else {
@@ -63,6 +78,7 @@ export default function Board() {
     }
   };
 
+  // 승리조건은 지뢰수보다 플래그 변화에 의존하는게 더 합리적으로 보임..
   const handleFlag = (rowInput: number, colInput: number): void => {
     // mine 수 변경
     if (board[rowInput][colInput].flaged) {

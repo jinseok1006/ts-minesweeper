@@ -1,16 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import type { Cell } from './board';
-
 import boardSlice from './board';
 import flagModeSlice from './flagMode';
 import minesSlice from './mines';
-
-export interface State {
-  board: Cell[][];
-  flagMode: boolean;
-  mines: number;
-}
 
 const store = configureStore({
   reducer: {
@@ -22,5 +14,6 @@ const store = configureStore({
 });
 
 export type Dispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
 
 export default store;

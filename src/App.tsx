@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import styled, { createGlobalStyle } from 'styled-components';
 import { Provider, useDispatch } from 'react-redux';
 
 import { initializeBoard } from './util';
 
-import store from './contexts';
+import store from './store';
 
 import Board from './components/Board';
 import ModeComponent from './components/Mode';
 import Header from './components/Header';
+import Over from './components/Over';
 
 // Minesweeper;
 
@@ -50,8 +51,18 @@ function App() {
   );
 }
 
+export type OverState = 'WIN' | 'DEFEAT' | 'ONGOING';
 function Minesweeper() {
+  const [over, setOver] = useState<OverState>('ONGOING');
   const dispatch = useDispatch();
+
+  const toggleOver = (payload: OverState) => {
+    setOver(payload);
+
+    if (payload === 'ONGOING') {
+      initializeBoard(dispatch);
+    }
+  };
 
   // 게임이 처음 시작될 때 상태 초기화
   useEffect(() => {
@@ -61,10 +72,11 @@ function Minesweeper() {
   return (
     <>
       <Header />
-      <Board />
+      <Board toggleOver={toggleOver} />
       <Panel>
         <ModeComponent />
       </Panel>
+      {over !== 'ONGOING' ? <Over over={over} toggleOver={toggleOver} /> : null}
     </>
   );
 }

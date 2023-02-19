@@ -2,12 +2,12 @@ import * as React from 'react';
 import { BsFlagFill } from 'react-icons/bs';
 
 import { useSelector, useDispatch } from 'react-redux';
-import flagModeSlice from '@/contexts/flagMode';
+import flagModeSlice from '@/store/flagMode';
 
-import type { State } from '@/contexts';
+import type { RootState } from '@/store';
 
 export default function ModeComponent() {
-  const flagMode = useSelector((state: State) => state.flagMode);
+  const flagMode = useSelector((state: RootState) => state.flagMode);
   const dispatch = useDispatch();
 
   const toggleFlagMode = () => {

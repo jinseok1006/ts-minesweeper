@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import type { State } from '@/contexts';
+import type { RootState } from '@/store';
 import styled from 'styled-components';
 
 import { CSS_WIDTH } from '@/constant';
@@ -15,7 +15,7 @@ const HeaderBlock = styled.div`
 `;
 
 export default function Header() {
-  const mines = useSelector((state: State) => state.mines);
+  const mines = useSelector((state: RootState) => state.mines);
 
   return (
     <HeaderBlock>

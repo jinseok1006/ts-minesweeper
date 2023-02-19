@@ -2,7 +2,7 @@ import * as React from 'react';
 import { boolToString } from '../util';
 import styled, { css } from 'styled-components';
 
-import type { Cell } from '@/contexts/board';
+import type { Cell } from '@/store/board';
 
 const CellBlock = styled.button`
   // instead of !important
@@ -42,14 +42,14 @@ export default function CellComponent({
       onClick={() => handleSelect(rowIndex, colIndex)}
       onContextMenu={(e) => handleRightclick(e, rowIndex, colIndex)}
     >
-      {/* {rowIndex}
+      {rowIndex}
       {colIndex}
       <br />
       {boolToString(mined)}
       {boolToString(selected)}
       {boolToString(flaged)}
-      {mines} */}
-      {selected && mines ? mines : null}
+      {mines}
+      {/* {selected && mines ? mines : null} */}
     </CellBlock>
   );
 }
