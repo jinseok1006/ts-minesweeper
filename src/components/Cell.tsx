@@ -10,11 +10,12 @@ const CellBlock = styled.button`
     ${({ selected, flaged }: { selected: boolean; flaged: boolean }) =>
       css`
         background-color: ${() => {
-          if (selected) return 'green';
-          else if (flaged) return 'red';
+          if (selected) return '#b2f2bb';
+          else if (flaged) return '#ffc078';
           else return 'unset';
         }};
       `}
+    color: rgb(0,0,0);
   }
 `;
 
