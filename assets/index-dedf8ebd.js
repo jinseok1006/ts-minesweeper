@@ -75,8 +75,9 @@ Error generating stack: `+i.message+`
   // instead of !important
   && {
     ${({selected:e,flaged:t})=>us`
-        background-color: ${()=>e?"green":t?"red":"unset"};
+        background-color: ${()=>e?"#b2f2bb":t?"#ffc078":"unset"};
       `}
+    color: rgb(0,0,0);
   }
 `;function qy({cell:e,debug:t,handleSelect:n,handleRightclick:r}){const{colIndex:o,rowIndex:i,mined:l,selected:u,flaged:a,mines:s}=e;return ee(Jy,{selected:u,flaged:a,onClick:()=>n(i,o),onContextMenu:f=>r(f,i,o),children:t?gn($i,{children:[i,o,ee("br",{}),bl(l),bl(u),bl(a),s]}):u&&s?s:null})}const by=ar.div`
   width: ${zp}px;
