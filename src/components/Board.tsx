@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { COL_MAX, CSS_WIDTH } from '@/constant';
+import { COL_MAX, DELTA, ROW_MAX, CSS_WIDTH } from '@/constant';
 
 import type { State } from '@/contexts';
 import boardSlice from '@/contexts/board';
+import type { Cell } from '@/contexts/board';
 
 import CellComponent from './Cell';
 import { initializeBoard } from '@/util';
@@ -39,27 +40,20 @@ const BoardBlock = styled.div`
 `;
 
 export default function Board() {
-  const board = useSelector((state: State) => state.board);
-  const flagMode = useSelector((state: State) => state.flagMode);
+  const { flagMode, board } = useSelector((state: State) => state);
   const dispatch = useDispatch();
 
-  const handleSelect = (rowInput: number, colInput: number): void => {
+  const handleClick = (rowInput: number, colInput: number): void => {
     if (board[rowInput][colInput].selected) return;
 
     // 깃발모드
     if (flagMode) {
-      // flaged -> unflaged
-      if (board[rowInput][colInput].flaged) {
-        dispatch(minesSlice.actions.increase());
-      } else {
-        dispatch(minesSlice.actions.decrease());
-      }
-      dispatch(boardSlice.actions.flag({ row: rowInput, col: colInput }));
+      handleFlag(rowInput, colInput);
     } else {
-      // 지뢰 클릭시 게임초기화
+      if (board[rowInput][colInput].flaged) return;
+      // 지뢰
       if (board[rowInput][colInput].mined) {
-        alert('MINED!');
-        alert('RESET BOARD');
+        alert('MINED!\nRESET BOARD');
         initializeBoard(dispatch);
       }
       // 빈칸
@@ -69,11 +63,38 @@ export default function Board() {
     }
   };
 
+  const handleFlag = (rowInput: number, colInput: number): void => {
+    // mine 수 변경
+    if (board[rowInput][colInput].flaged) {
+      dispatch(minesSlice.actions.increase());
+    } else {
+      dispatch(minesSlice.actions.decrease());
+    }
+
+    // board 플래그 수정
+    dispatch(boardSlice.actions.flag({ row: rowInput, col: colInput }));
+  };
+
+  const handleRightClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    rowInput: number,
+    colInput: number
+  ): void => {
+    e.preventDefault();
+    if (board[rowInput][colInput].selected) return;
+    handleFlag(rowInput, colInput);
+  };
+
   return (
     <BoardBlock>
       {board.map((row) =>
         row.map((cell, j) => (
-          <CellComponent key={j} cell={cell} handleSelect={handleSelect} />
+          <CellComponent
+            key={j}
+            cell={cell}
+            handleSelect={handleClick}
+            handleRightclick={handleRightClick}
+          />
         ))
       )}
     </BoardBlock>

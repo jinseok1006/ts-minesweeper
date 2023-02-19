@@ -5,22 +5,11 @@ import { Dispatch } from './contexts';
 
 import boardSlice from './contexts/board';
 import minesSlice from './contexts/mines';
+import { DELTA } from './constant';
 
 export function boolToString(t: boolean) {
   return t ? '1' : '0';
 }
-
-const delta = [
-  // [dx, dy]
-  [-1, -1],
-  [0, -1],
-  [1, -1],
-  [-1, 0],
-  [1, 0],
-  [-1, 1],
-  [0, 1],
-  [1, 1],
-];
 
 // 직접수정
 function updateCellMines(board: Cell[][]): void {
@@ -35,7 +24,7 @@ function getCellMines(board: Cell[][], cell: Cell): number {
   const { colIndex, rowIndex } = cell;
 
   let mines = 0;
-  for (const [dx, dy] of delta) {
+  for (const [dx, dy] of DELTA) {
     const nx = rowIndex + dx,
       ny = colIndex + dy;
 
@@ -58,7 +47,7 @@ export function getAllMines(board: Cell[][]): number {
   return mines;
 }
 
-const MINE_WEIGHT = 0.7;
+const MINE_WEIGHT = 0.8;
 const createMine = (): boolean => Math.random() > MINE_WEIGHT;
 
 const initialCell = (rowIndex: number, colIndex: number): Cell => ({
@@ -84,6 +73,6 @@ export const initializeBoard = (dispatch: Dispatch): void => {
   const board = getInitialBoard();
   const mines = getAllMines(board);
 
-  dispatch(boardSlice.actions.init(board));
+  dispatch(boardSlice.actions.set(board));
   dispatch(minesSlice.actions.set(mines));
 };
