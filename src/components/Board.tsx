@@ -15,6 +15,7 @@ import type { OverState } from '@/App';
 const BoardBlock = styled.div`
   width: ${CSS_WIDTH}px;
   margin: 0 auto;
+  margin-bottom: 5rem;
   display: flex;
   flex-wrap: wrap;
 

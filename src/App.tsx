@@ -25,7 +25,6 @@ const GlobalStyle = createGlobalStyle`
   }
   #root {
     padding-top: 2rem;
-    min-height:110vh;
   }
 `;
 
