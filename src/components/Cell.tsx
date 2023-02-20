@@ -4,10 +4,7 @@ import styled, { css } from 'styled-components';
 
 import type { Cell } from '@/store/board';
 
-import flag from '@/assets/flag.svg';
-import mine from '@/assets/mine.svg';
-
-import numbers from '@/assets/numbers';
+import { symbols, numbers } from '@/assets/sprite';
 
 interface CellBlockProps {
   mined: boolean;
@@ -31,7 +28,7 @@ const CellBlock = styled.div`
       if (selected) {
         if (mined)
           return css`
-            background-image: url(${mine});
+            background-image: url(${symbols.mine});
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-position: center;
@@ -40,16 +37,15 @@ const CellBlock = styled.div`
           `;
         else
           return css`
-            background-image: ${mines && `url(${numbers[mines - 1]})`};
             background-repeat: no-repeat;
+            background-image: ${mines && `url(${numbers[mines - 1]})`};
+            background-size: 100%;
             background-position: center;
-            background-size: 100% 100%;
-
             ${selectedStyled}
           `;
       } else if (flaged)
         return css`
-          background-image: ${flaged && `url(${flag})`};
+          background-image: ${flaged && `url(${symbols.flag})`};
           background-size: 135% 135%;
           background-repeat: no-repeat;
           background-position: center;
