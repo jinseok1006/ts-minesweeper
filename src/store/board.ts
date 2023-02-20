@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { DELTA, ROW_MAX, COL_MAX } from '@/constant';
+import { DELTA, ROW_MAX, COL_MAX } from '@/constants';
 
 export interface Cell {
   colIndex: number;

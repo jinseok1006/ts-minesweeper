@@ -1,11 +1,11 @@
 import type { Cell } from './store/board';
 
-import { COL_MAX, ROW_MAX } from './constant';
+import { COL_MAX, ROW_MAX } from './constants';
 import { Dispatch } from './store';
 
 import boardSlice from './store/board';
 import minesSlice from './store/mines';
-import { DELTA } from './constant';
+import { DELTA } from './constants';
 
 export function boolToString(t: boolean) {
   return t ? '1' : '0';
@@ -47,7 +47,7 @@ export function getAllMines(board: Cell[][]): number {
   return mines;
 }
 
-const MINE_WEIGHT = 0.8;
+const MINE_WEIGHT = 0.83;
 const createMine = (): boolean => Math.random() > MINE_WEIGHT;
 
 const initialCell = (rowIndex: number, colIndex: number): Cell => ({

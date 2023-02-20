@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '@/store';
 import styled from 'styled-components';
 
-import { CSS_WIDTH } from '@/constant';
+import { CSS_WIDTH } from '@/constants';
 
 const HeaderBlock = styled.div`
   width: ${CSS_WIDTH}px;

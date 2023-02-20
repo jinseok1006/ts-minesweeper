@@ -1,5 +1,5 @@
-export const COL_MAX = 7;
-export const ROW_MAX = 13;
+export const COL_MAX = 10;
+export const ROW_MAX = 20;
 
 // 항상 circular imports가 존재하는지 확인하자.
 

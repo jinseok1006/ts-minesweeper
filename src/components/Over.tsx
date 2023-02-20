@@ -1,17 +1,31 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import type { OverState } from '@/App';
 
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { slideUp, slideDown, fadeIn, fadeOut } from '@/keyframes';
+const ANIMATION_DURATION = 250;
+
+const ModalBlock = styled.div`
+  animation-duration: ${ANIMATION_DURATION}ms;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-name: ${slideUp};
+
+  ${({ unmount }: BlockProps) =>
+    unmount &&
+    css`
+      animation-name: ${slideDown};
+    `}
+`;
 
 const BackgroundBlock = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 10;
+  z-index: 5;
   width: 100vw;
   height: 100vh;
-  transition: 1s ease all;
   background-color: rgba(0, 0, 0, 0.75);
 
   display: flex;
@@ -32,22 +46,43 @@ const BackgroundBlock = styled.div`
     display: block;
     margin: 0 auto;
   }
+
+  animation-duration: ${ANIMATION_DURATION}ms;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-name: ${fadeIn};
+
+  ${({ unmount }: BlockProps) =>
+    unmount &&
+    css`
+      animation-name: ${fadeOut};
+    `}
 `;
 
-export default function Over({
-  over,
-  toggleOver,
-}: {
+interface BlockProps {
+  unmount: boolean;
+}
+
+interface OverProps {
   over: OverState;
   toggleOver: (payload: OverState) => void;
-}) {
+}
+
+export default function Over({ over, toggleOver }: OverProps) {
+  const [unmount, setUnmount] = useState(false);
+
+  const handleUnmount = () => {
+    setUnmount(true);
+    setTimeout(() => toggleOver('ONGOING'), ANIMATION_DURATION);
+  };
+
   return (
-    <BackgroundBlock>
-      <div>
+    <BackgroundBlock unmount={unmount}>
+      <ModalBlock unmount={unmount}>
         <h1>Game Over!</h1>
         <h2>You {over}</h2>
-        <button onClick={() => toggleOver('ONGOING')}>re?</button>
-      </div>
+        <button onClick={handleUnmount}>re?</button>
+      </ModalBlock>
     </BackgroundBlock>
   );
 }

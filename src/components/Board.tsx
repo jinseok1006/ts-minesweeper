@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { COL_MAX, CSS_WIDTH } from '@/constant';
+import { COL_MAX, CSS_WIDTH } from '@/constants';
 
 import type { RootState } from '@/store';
 import boardSlice from '@/store/board';
@@ -12,27 +12,35 @@ import minesSlice from '@/store/mines';
 
 import type { OverState } from '@/App';
 
-const BoardBlock = styled.div`
+const BoardBorder = styled.div`
+  border-color: rgb(198, 198, 198);
+  border-width: 15px;
+  border-style: solid;
+  box-sizing: content-box;
   width: ${CSS_WIDTH}px;
   margin: 0 auto;
   margin-bottom: 5rem;
+`;
+
+const BoardBlock = styled.div`
   display: flex;
   flex-wrap: wrap;
 
-  border-left: 1px solid black;
-  border-top: 1px solid black;
-
-  button {
+  border-style: inset;
+  border-width: 10px;
+  /* gap: 5px; */
+  div {
     width: calc(100% / ${COL_MAX});
-    height: 50px;
-    border: 1px solid black;
-    border-top: none;
-    border-left: none;
+    height: 33px;
+    /* line-height: 42px; */
+    text-align: center;
+    background-color: rgb(198, 198, 198);
+    border-width: 4px;
+    border-style: outset;
+    border-color: rgb(240, 240, 240);
 
     user-select: none;
-    transition: 0.25s ease all;
 
-    outline: none;
     // iOS Safari has a built-in visual feedback mechanism
     // that causes the background color of a clickable element
     // to temporarily change when it is clicked.
@@ -70,6 +78,7 @@ export default function Board({ toggleOver }: BoardProps) {
       if (board[rowInput][colInput].flaged) return;
       // 지뢰
       if (board[rowInput][colInput].mined) {
+        dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
         toggleOver('DEFEAT');
       }
       // 빈칸
@@ -93,7 +102,7 @@ export default function Board({ toggleOver }: BoardProps) {
   };
 
   const handleRightClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     rowInput: number,
     colInput: number
   ): void => {
@@ -103,18 +112,20 @@ export default function Board({ toggleOver }: BoardProps) {
   };
 
   return (
-    <BoardBlock>
-      {board.map((row) =>
-        row.map((cell, j) => (
-          <CellComponent
-            debug={debug}
-            key={j}
-            cell={cell}
-            handleSelect={handleClick}
-            handleRightclick={handleRightClick}
-          />
-        ))
-      )}
-    </BoardBlock>
+    <BoardBorder>
+      <BoardBlock>
+        {board.map((row) =>
+          row.map((cell, j) => (
+            <CellComponent
+              debug={debug}
+              key={j}
+              cell={cell}
+              handleSelect={handleClick}
+              handleRightclick={handleRightClick}
+            />
+          ))
+        )}
+      </BoardBlock>
+    </BoardBorder>
   );
 }
