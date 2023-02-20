@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -39,7 +39,9 @@ const BoardBlock = styled.div`
     border-style: outset;
     border-color: rgb(240, 240, 240);
 
-    user-select: none;
+    &:active {
+      border-style: inset;
+    }
 
     // iOS Safari has a built-in visual feedback mechanism
     // that causes the background color of a clickable element
@@ -68,48 +70,57 @@ export default function Board({ toggleOver }: BoardProps) {
     }
   }, [board]);
 
-  const handleClick = (rowInput: number, colInput: number): void => {
-    if (board[rowInput][colInput].selected) return;
+  const handleClick = useCallback(
+    (rowInput: number, colInput: number): void => {
+      if (board[rowInput][colInput].selected) return;
 
-    // 깃발모드
-    if (flagMode) {
-      handleFlag(rowInput, colInput);
-    } else {
-      if (board[rowInput][colInput].flaged) return;
-      // 지뢰
-      if (board[rowInput][colInput].mined) {
-        dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
-        toggleOver('DEFEAT');
+      // 깃발모드
+      if (flagMode) {
+        handleFlag(rowInput, colInput);
+      } else {
+        if (board[rowInput][colInput].flaged) return;
+        // 지뢰
+        if (board[rowInput][colInput].mined) {
+          dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
+          toggleOver('DEFEAT');
+        }
+        // 빈칸
+        else {
+          dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
+        }
       }
-      // 빈칸
-      else {
-        dispatch(boardSlice.actions.select({ row: rowInput, col: colInput }));
-      }
-    }
-  };
+    },
+    [flagMode, board]
+  );
 
   // 승리조건은 지뢰수보다 플래그 변화에 의존하는게 더 합리적으로 보임..
-  const handleFlag = (rowInput: number, colInput: number): void => {
-    // mine 수 변경
-    if (board[rowInput][colInput].flaged) {
-      dispatch(minesSlice.actions.increase());
-    } else {
-      dispatch(minesSlice.actions.decrease());
-    }
+  const handleFlag = useCallback(
+    (rowInput: number, colInput: number): void => {
+      // mine 수 변경
+      if (board[rowInput][colInput].flaged) {
+        dispatch(minesSlice.actions.increase());
+      } else {
+        dispatch(minesSlice.actions.decrease());
+      }
 
-    // board 플래그 수정
-    dispatch(boardSlice.actions.flag({ row: rowInput, col: colInput }));
-  };
+      // board 플래그 수정
+      dispatch(boardSlice.actions.flag({ row: rowInput, col: colInput }));
+    },
+    [board]
+  );
 
-  const handleRightClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    rowInput: number,
-    colInput: number
-  ): void => {
-    e.preventDefault();
-    if (board[rowInput][colInput].selected) return;
-    handleFlag(rowInput, colInput);
-  };
+  const handleRightClick = useCallback(
+    (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+      rowInput: number,
+      colInput: number
+    ): void => {
+      e.preventDefault();
+      if (board[rowInput][colInput].selected) return;
+      handleFlag(rowInput, colInput);
+    },
+    [board]
+  );
 
   return (
     <BoardBorder>

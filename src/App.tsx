@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import { Provider, useDispatch } from 'react-redux';
 
-import { initializeBoard } from './util';
+import { initializeBoard } from './core';
 
 import store from './store';
 
 import Board from './components/Board';
-import ModeComponent from './components/Mode';
+
 import Header from './components/Header';
 import Over from './components/Over';
-import Debug from './components/Debug';
+import Panel from './components/Panel';
 
 // Minesweeper;
 
@@ -25,18 +25,7 @@ const GlobalStyle = createGlobalStyle`
   }
   #root {
     padding-top: 2rem;
-  }
-`;
-
-const Panel = styled.div`
-  position: fixed;
-  right: 0;
-  bottom: 0;
-
-  button {
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
+    user-select: none;
   }
 `;
 
@@ -73,10 +62,7 @@ function Minesweeper() {
     <>
       <Header />
       <Board toggleOver={toggleOver} />
-      <Debug />
-      <Panel>
-        <ModeComponent />
-      </Panel>
+      <Panel />
       {over !== 'ONGOING' ? <Over over={over} toggleOver={toggleOver} /> : null}
     </>
   );

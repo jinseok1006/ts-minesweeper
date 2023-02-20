@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { boolToString } from '../util';
 import styled, { css } from 'styled-components';
 
 import type { Cell } from '@/store/board';
@@ -11,6 +10,7 @@ interface CellBlockProps {
   selected: boolean;
   flaged: boolean;
   mines: number;
+  debug: boolean;
 }
 
 const selectedStyled = css`
@@ -24,7 +24,27 @@ const selectedStyled = css`
 const CellBlock = styled.div`
   // instead of !important
   && {
-    ${({ mined, mines, selected, flaged }: CellBlockProps) => {
+    ${({ debug, mined, mines, selected, flaged }: CellBlockProps) => {
+      if (debug) {
+        if (mined)
+          return css`
+            background-image: url(${symbols.mine});
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: rgb(255, 0, 0);
+            ${selectedStyled}
+          `;
+        else
+          return css`
+            background-repeat: no-repeat;
+            background-image: ${mines && `url(${numbers[mines - 1]})`};
+            background-size: 100%;
+            background-position: center;
+            ${selectedStyled}
+          `;
+      }
+
       if (selected) {
         if (mined)
           return css`
@@ -65,7 +85,7 @@ interface CellProps {
   ) => void;
 }
 
-export default function CellComponent({
+export default React.memo(function CellComponent({
   cell,
   debug,
   handleSelect,
@@ -75,6 +95,7 @@ export default function CellComponent({
 
   return (
     <CellBlock
+      debug={debug}
       mined={mined}
       selected={selected}
       flaged={flaged}
@@ -90,4 +111,8 @@ export default function CellComponent({
       ) : null}
     </CellBlock>
   );
+});
+
+function boolToString(t: boolean) {
+  return t ? '1' : '0';
 }
