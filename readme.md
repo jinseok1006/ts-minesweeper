@@ -2,8 +2,8 @@
 
 ### legacy
 
-https://enchanting-banoffee-5c41dc.netlify.app/
+https://transcendent-kitsune-de1c76.netlify.app
 
 ### styled
 
-https://transcendent-kitsune-de1c76.netlify.app
+https://enchanting-banoffee-5c41dc.netlify.app/
